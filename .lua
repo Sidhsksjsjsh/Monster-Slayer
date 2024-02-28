@@ -16,6 +16,24 @@ local combat = {
       dataOrbs = 0
 }
 
+local function bypassSpeed()
+local hum = user.Character and user.Character:FindFirstChildWhichIsA("Humanoid")
+      
+task.spawn(function()
+while wait() and user.Character and hum and hum.Parent do
+if hum.MoveDirection.Magnitude > 0 then
+      user.Character:TranslateBy(hum.MoveDirection)
+end
+end
+end)
+ 
+--user.Character.Animate.Disabled = true
+local AnimControl = user.Character:FindFirstChildOfClass("Humanoid") or user.Character:FindFirstChildOfClass("AnimationController")
+for i,v in next,AnimControl:GetPlayingAnimationTracks() do
+      v:AdjustSpeed(0)
+end
+end
+
 local function getMonster(func)
   for i,v in pairs(workspace["Entities"]:GetChildren()) do
     func(v)
@@ -48,4 +66,8 @@ T1:Toggle("Auto tp behind monster",false,function(value)
           user.Character.HumanoidRootPart.CFrame = v.CFrame * CFrame.new(0,0,1.5)
       end)
     end
+end)
+
+T1:Button("Speedboost",function()
+      bypassSpeed()
 end)
